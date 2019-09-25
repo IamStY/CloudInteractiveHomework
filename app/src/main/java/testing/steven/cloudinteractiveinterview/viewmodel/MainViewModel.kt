@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import java.util.ArrayList
 
 import testing.steven.cloudinteractiveinterview.api.ApiRequestManager
-import testing.steven.cloudinteractiveinterview.api.ICallbackNotify
+import testing.steven.cloudinteractiveinterview.interfaces.ICallbackNotify
 import testing.steven.cloudinteractiveinterview.datamodels.CloudDataModel
 
 class MainViewModel : ViewModel() {
@@ -31,7 +31,8 @@ class MainViewModel : ViewModel() {
 
 
         ApiRequestManager.getInstance()
-            .getData(context, object : ICallbackNotify<ArrayList<CloudDataModel>> {
+            .getData(context, object :
+                ICallbackNotify<ArrayList<CloudDataModel>> {
                 override fun dataFetched(data: Any?) {
                     openDataLiveData?.postValue(data as ArrayList<CloudDataModel>)
                 }

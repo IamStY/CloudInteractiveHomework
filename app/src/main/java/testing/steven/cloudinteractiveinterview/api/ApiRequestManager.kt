@@ -6,7 +6,6 @@ import android.content.Context
 import com.android.volley.AuthFailureError
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.NetworkResponse
-import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
@@ -18,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 import testing.steven.cloudinteractiveinterview.datamodels.CloudDataModel
+import testing.steven.cloudinteractiveinterview.interfaces.ICallbackNotify
 import java.util.*
 
 class ApiRequestManager {
@@ -41,7 +41,7 @@ class ApiRequestManager {
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(context)
         }
-        val stringRequest = object : StringRequest(Request.Method.GET, functionURL, { response ->
+        val stringRequest = object : StringRequest(Method.GET, functionURL, { response ->
 
         }, { error -> iCallback_notify?.failure() }) {
             override fun getBodyContentType(): String {

@@ -15,8 +15,8 @@ import java.util.ArrayList
 import testing.steven.cloudinteractiveinterview.R
 import testing.steven.cloudinteractiveinterview.datamodels.CloudDataModel
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-
+import testing.steven.cloudinteractiveinterview.interfaces.IBitmapNotify
+import testing.steven.cloudinteractiveinterview.utils.BitmapEntranceUtils
 
 
 class OpenDataRecyclerAdapter(dataModelArrayList: ArrayList<CloudDataModel> , activity :Activity) :
@@ -45,24 +45,23 @@ class OpenDataRecyclerAdapter(dataModelArrayList: ArrayList<CloudDataModel> , ac
 
         tv_title.text = cloudDataModel.title
         tv_id.text = cloudDataModel.id
-        tv_title.setTag("tv_title$position")
+        tv_title.tag = "tv_title${position}"
 
         val runnable = Runnable {
-            var bm: Bitmap? = null
-            try {
-                val `in` = java.net.URL( cloudDataModel.thumbnailUrl!!).openStream()
-                bm = BitmapFactory.decodeStream(`in`)
-                if(bm!=null&&tv_title.getTag()=="tv_title$position"){
-                    activity?.runOnUiThread {
-                        iv_image.setImageBitmap(bm)
-                    }
+                BitmapEntranceUtils(activity!!).retrieveImage(cloudDataModel.thumbnailUrl!!,
+                    object :
+                        IBitmapNotify {
+                        override fun failure() {
+                        }
 
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-
+                        override fun dataFetched(data: Bitmap?) {
+                            var bm = data as Bitmap
+                            activity?.runOnUiThread {
+                                if (tv_title.tag == "tv_title${position}")
+                                    iv_image.setImageBitmap(bm)
+                            }
+                        }
+                    })
         }
         val thread = Thread(runnable)
         thread.start()
